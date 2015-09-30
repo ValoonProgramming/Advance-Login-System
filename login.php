@@ -52,6 +52,15 @@ if (isset($_POST["account-login"])) {
     $stmt->close();
   }
 }
+if (isset($_POST["account-register"])) {
+  $_SESSION["redirectcode"] = "3345";
+}
+if (isset($_POST["account-forgot"])) {
+  $_SESSION["redirectcode"] = "6945";
+}
+if (isset($_POST["account-admin"])) {
+  $_SESSION["redirectcode"] = "9900";
+}
 if ($_SESSION["redirectcode"] === "9247") {
   $_SESSION["redirectcode"] = "";
   header("Location: ".$url."/dashboard");
