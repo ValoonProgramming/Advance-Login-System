@@ -23,7 +23,23 @@ if (isset($_POST["account-login"])) {
     $loginerror = "The email is not valid.";
   } elseif {
     $sql = "SELECT `id`,`username`,`password`,`email` FROM `users` WHERE `email` = ?";
-    
+    if ($stmt = $link->prepare($sql)) {
+      $stmt->bind_param('s', $account_email);
+      $stmt->execute();
+      $stmt->store_result();
+      if ($stmt->num_rows == 1) {
+        $stmt->bind_result($db_id, $db_username, $db_password, $db_email);
+        $stmt->fetch();
+        if ($password == $db_password) {
+          // start users session
+        } else {
+          $loginerror = "The password is incorrect.";
+        }
+      } else {
+        $loginerror = "The email does not exist.";
+      }
+    }
+    $stmt->close();
   }
 }
 function safe($data) {
