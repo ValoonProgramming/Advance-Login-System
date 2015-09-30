@@ -22,6 +22,11 @@ if (isset($_POST["account-login"])) {
   if (!filter_var($account_email, FILTER_VALIDATE_EMAIL)) {
     $loginerror = "The email is not valid.";
   } elseif {
+    $options = [
+      'cost' => 11,
+      'salt' => mcrypt_create_iv(22, MCRYPT_DEV_URANDOM),
+    ];
+    $account_password = password_hash($account_password, PASSWORD_BCRYPT, $options)."\n";
     $sql = "SELECT `id`,`username`,`password`,`email` FROM `users` WHERE `email` = ?";
     if ($stmt = $link->prepare($sql)) {
       $stmt->bind_param('s', $account_email);
@@ -32,6 +37,11 @@ if (isset($_POST["account-login"])) {
         $stmt->fetch();
         if ($password == $db_password) {
           // start users session
+          $_SESSION["logged"] = true;
+          $_SESSION["username"] = $db_username;
+          $_SESSION["email"] = $db_email
+          $_SESSION["string"] = "" . $db_id . "" . $db_password . "" . $db_username . "";
+          $_SESSION["redirectcode"] = "9247";
         } else {
           $loginerror = "The password is incorrect.";
         }
@@ -42,6 +52,31 @@ if (isset($_POST["account-login"])) {
     $stmt->close();
   }
 }
+if ($_SESSION["redirectcode"] === "9247") {
+  $_SESSION["redirectcode"] = "";
+  header("Location: ".$url."/dashboard");
+  exit;
+} else {
+}
+if ($_SESSION["redirectcode"] === "3345") {
+  $_SESSION["redirectcode"] = "";
+  header("Location: ".$url."/register");
+  exit;
+} else {
+}
+if ($_SESSION["redirectcode"] === "6945") {
+  $_SESSION["redirectcode"] = "";
+  header("Location: ".$url."/forgot");
+  exit;
+} else {
+}
+if ($_SESSION["redirectcode"] === "9900") {
+  $_SESSION["redirectcode"] = "";
+  header("Location: ".$url."/admin");
+  exit;
+} else {
+}
+$_SESSION["redirectcode"] = "";
 function safe($data) {
   $data = trim($data);
   $data = stripslashes($data);
