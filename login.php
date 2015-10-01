@@ -92,4 +92,5 @@ function safe($data) {
   $data = htmlspecialchars($data);
   return $data;
 }
+include "configuration/vars.php";
 ?>
